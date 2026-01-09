@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azellia Knockout Bar</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #7f1d1d 0%, #991b1b 50%, #7f1d1d 100%);
+            color: white;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(to right, #6b21a8, #581c87);
+            padding: 1.5rem 2rem;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .trophy-icon {
+            width: 48px;
+            height: 48px;
+            color: #fbbf24;
+        }
+
+        .header h1 {
+            font-size: 2.25rem;
+            font-weight: bold;
+            color: #fbbf24;
+            letter-spacing: 0.05em;
+        }
+
+        .header p {
+            color: #e9d5ff;
+            font-style: italic;
+        }
+
+        .banner {
+            background: #b91c1c;
+            padding: 0.75rem 0;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .banner-content {
+            display: inline-block;
+            white-space: nowrap;
+            animation: scroll 20s linear infinite;
+        }
+
+        .banner-text {
+            display: inline-block;
+            padding: 0 2rem;
+            color: #fcd34d;
+            font-weight: bold;
+        }
+
+        @keyframes scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        .main-container {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem;
+        }
+
+        .tournaments-column {
+            width: 288px;
+            flex-shrink: 0;
+        }
+
+        .card {
+            background: #581c87;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+        }
+
+        .card h2 {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .tournament-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .tournament-item {
+            background: #eab308;
+            color: black;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        .tournament-item:hover {
+            background: #facc15;
+            transform: scale(1.05);
+        }
+
+        .tournament-item.selected {
+            background: #ca8a04;
+        }
+
+        .tournament-item h3 {
+            font-weight: bold;
+            font-size: 1.125rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .tournament-detail {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+
+        .tournament-status {
+            font-size: 0.75rem;
+            font-style: italic;
+            margin-top: 0.5rem;
+        }
+
+        .center-column {
+            flex: 1;
+            overflow-x: auto;
+        }
+
+        .tournament-details {
+            background: #581c87;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+        }
+
+        .tournament-title {
+            font-size: 1.875rem;
+            font-weight: bold;
+            color: #fbbf24;
+            margin-bottom: 1rem;
+        }
+
+        .prizes-section {
+            background: #6b21a8;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .prizes-title {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: #fcd34d;
+            margin-bottom: 0.75rem;
+        }
+
+        .prizes-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+        }
+
+        .prize-card {
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            text-align: center;
+        }
+
+        .prize-gold {
+            background: #eab308;
+            color: black;
+        }
+
+        .prize-silver {
+            background: #d1d5db;
+            color: black;
+        }
+
+        .prize-bronze {
+            background: #ea580c;
+            color: white;
+        }
+
+        .prize-medal {
+            font-size: 2rem;
+        }
+
+        .prize-amount {
+            font-weight: bold;
+        }
+
+        .prize-place {
+            font-size: 0.75rem;
+        }
+
+        .bracket-section {
+            background: #6b21a8;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            overflow-x: auto;
+        }
+
+        .bracket-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #fcd34d;
+            margin-bottom: 1rem;
+        }
+
+        .bracket-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 3rem;
+            padding: 2rem 0;
+            min-width: max-content;
+        }
+
+        .bracket-round {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .bracket-round-title {
+            color: #fcd34d;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .bracket-matches {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .bracket-match {
+            background: #6b21a8;
+            border: 2px solid #7c3aed;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            width: 192px;
+            margin-bottom: 2rem;
+        }
+
+        .bracket-match.finale {
+            background: linear-gradient(to right, #eab308, #ca8a04);
+            border-color: #fbbf24;
+            width: 224px;
+        }
+
+        .bracket-fighter {
+            padding: 0.75rem;
+            border-bottom: 2px solid #7c3aed;
+        }
+
+        .bracket-fighter:last-child {
+            border-bottom: none;
+        }
+
+        .bracket-match.finale .bracket-fighter {
+            border-color: #fbbf24;
+            color: black;
+            font-weight: bold;
+        }
+
+        .empty-state {
+            background: #581c87;
+            border-radius: 0.5rem;
+            padding: 3rem;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+        }
+
+        .empty-icon {
+            width: 96px;
+            height: 96px;
+            color: #fbbf24;
+            margin: 0 auto 1rem;
+        }
+
+        .empty-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #fbbf24;
+            margin-bottom: 0.5rem;
+        }
+
+        .empty-text {
+            color: #e9d5ff;
+        }
+
+        .ranking-column {
+            width: 320px;
+            flex-shrink: 0;
+        }
+
+        .ranking-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .ranking-item {
+            padding: 1rem;
+            border-radius: 0.5rem;
+        }
+
+        .ranking-item.rank-1 {
+            background: linear-gradient(to right, #ca8a04, #eab308);
+            color: black;
+        }
+
+        .ranking-item.rank-2 {
+            background: linear-gradient(to right, #9ca3af, #d1d5db);
+            color: black;
+        }
+
+        .ranking-item.rank-3 {
+            background: linear-gradient(to right, #ea580c, #f97316);
+            color: white;
+        }
+
+        .ranking-item.rank-other {
+            background: #6b21a8;
+            color: white;
+        }
+
+        .ranking-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+
+        .ranking-left {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .ranking-number {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .ranking-name {
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .ranking-record {
+            font-size: 0.875rem;
+            opacity: 0.9;
+        }
+
+        .ranking-earnings {
+            font-size: 0.875rem;
+            font-weight: bold;
+        }
+
+        .icon {
+            width: 1rem;
+            height: 1rem;
+            display: inline-block;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <div class="header-left">
+                <svg class="trophy-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path>
+                </svg>
+                <div>
+                    <h1>Azellia Knockout Bar</h1>
+                    <p>L'Élite de la Boxe Française</p>
+                </div>
+            </div>
+            <svg class="trophy-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path>
+            </svg>
+        </div>
+    </div>
+
+    <div class="banner">
+        <div class="banner-content">
+            <span class="banner-text">
+                ⭐ Pour commander des tournois et/ou matchs, envoyer un message privé à Azellia (17614) 
+                ⭐ Pour s'inscrire aux tournois et suivre les actualités, rejoignez notre Discord officiel !
+            </span>
+            <span class="banner-text">
+                ⭐ Pour commander des tournois et/ou matchs, envoyer un message privé à Azellia (17614)
+                ⭐ Pour s'inscrire aux tournois et suivre les actualités, rejoignez notre Discord officiel !
+            </span>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <div class="tournaments-column">
+            <div class="card">
+                <h2>
+                    <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                    </svg>
+                    Tournois
+                </h2>
+                <div class="tournament-list" id="tournamentList"></div>
+            </div>
+        </div>
+
+        <div class="center-column" id="centerColumn"></div>
+
+        <div class="ranking-column">
+            <div class="card">
+                <h2 style="color: #fbbf24;">
+                    <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"> 
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path>
+                    </svg>
+                    Classement Global
+                </h2>
+                <div class="ranking-list" id="rankingList "></div> 
+            </div>
+        </div>
+    </div>
+
+    <script>
+      const tournaments = [
+    {
+        id: 1,
+        name: "Battle Night: A-Series",
+        date: "XXX",
+        participants: 16,
+        prize: "1 000 000$",
+        status: "Ouvert aux inscriptions",
+        prizes: { first: "500 000$", second: "300 000$", third: "200 000$" },
+        fighters: [ 'TBD1', 'TBD2', 'TBD3', 'TBD4', 'TBD5', 'TBD6','TBD7', 'TBD8', 'TBD9', 'TBD10', 'TBD11', 'TBD12','TBD13', 'TBD14', 'TBD15', 'TBD16', ],
+results: {
+    round16: [],
+    round8: ['TBD1', 'TBD2', 'TBD3', 'TBD4', 'TBD5', 'TBD6','TBD7', 'TBD8',],  // Fait par Azellia avec IA
+    quarters: ['TBD1', 'TBD2', 'TBD3', 'TBD4',],  // Fait par Azellia avec IA
+    semis: ['TBD1', 'TBD2'],  // Fait par Azellia avec IA.
+    final: "Winner"  // Fait pa"r Azellia avec IeA
+}
+    },
+    //Fait pZar Azellia avec IA2
+];
+
+        const ranking = [
+            { rank: 1, name: "XXXXXX", wins: 0, losses: 0, earnings: "€0,000", country: "🇫🇷" },
+            { rank: 2, name: "XXXXXX", wins: 0, losses: 0, earnings: "€0,000", country: "🇫🇷" },
+            { rank: 3, name: "XXXXXX", wins: 0, losses: 0, earnings: "€0,000", country: "🇫🇷" },
+            { rank: 4, name: "XXXXXX", wins: 0, losses: 0, earnings: "€0,000", country: "🇫🇷" },
+            { rank: 5, name: "XXXXXX", wins: 0, losses: 0, earnings: "€0,000", country: "🇫🇷" },
+            { rank: 6, name: "XXXXXX", wins: 0, losses: 0, earnings: "€0,000", country: "🇫🇷" },
+            { rank: 2, name: "XXXXXX", wins: 0, losses: 0, earnings: "€0,500", country: "🇫🇷" },
+            { rank: 3, name: "XXXXXX", wins: 0, losses: 0, earnings: "€0,000", country: "🇫🇷" },
+            { rank: 4, name: "XXXXXX", wins: 0, losses: 0, earnings: "€0,000", country: "🇫🇷" },
+            { rank: 5, name: "XXXXXX", wins: 0, losses: 0, earnings: "€0,500", country: "🇫🇷" },
+            { rank: 6, name: "XXXXXX", wins: 0, losses: 0, earnings: "€0,000", country: "🇫🇷" },
+            { rank: 7, name: "XXXXXX", wins: 0, losses: 0, earnings: "€0,000", country: "🇫🇷" },
+            { rank: 8, name: "XXXXXX", wins: 0, losses: 0, earnings: "€0,000", country: "🇫🇷" }
+        ];
+
+        let selectedTournament = null;
+
+//Fait par Azell2ia avec IA
+
+function setWinner(round, matchIndex, fighterIndex) {
+    if (!selectedTournament.results) {
+        selectedTournament.results = {
+            round16: [],
+            round8: [],
+            quarters: [],
+            semis: [],
+            final: ""
+        };
+    }
+    
+    let winner;
+    const fighters = selectedTournament.fighters;
+    const results = selectedTournament.results;
+    
+    if (round === 'round16') {
+        winner = fighters[matchIndex * 2 + fighterIndex];
+        results.round16[matchIndex] = winner;
+    } else if (round === 'round8') {
+        if (selectedTournament.participants === 32) {
+            winner = results.round16[matchIndex * 2 + fighterIndex];
+        } else {
+            winner = fighters[matchIndex * 2 + fighterIndex];
+        }
+        results.round8[matchIndex] = winner;
+    } else if (round === 'quarters') {
+        if (selectedTournament.participants === 32) {
+            winner = results.round8[matchIndex * 2 + fighterIndex];
+        } else if (selectedTournament.participants === 16) {
+            winner = results.round8[matchIndex * 2 + fighterIndex];
+        } else {
+            winner = fighters[matchIndex * 2 + fighterIndex];
+        }
+        results.quarters[matchIndex] = winner;
+    } else if (round === 'semis') {
+        winner = results.quarters[matchIndex * 2 + fighterIndex];
+        results.semis[matchIndex] = winner;
+    } else if (round === 'final') {
+        winner = results.semis[fighterIndex];
+        results.final = winner;
+    }
+    //Fai2t par Azel5lia a6vec IA
+    renderCenter();
+}
+
+        function renderTournaments() {
+            const list = document.getElementById('tournamentList');
+            list.innerHTML = tournaments.map(t => `
+                <div class="tournament-item ${selectedTournament?.id === t.id ? 'selected' : ''}" onclick="selectTournament(${t.id})">
+                    <h3>${t.name}</h3>
+                    <div class="tournament-detail">
+                        <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                        </svg>
+                        ${t.date}
+                    </div>
+                    <div class="tournament-detail">
+                        <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                        </svg>
+                        ${t.participants} participants
+                    </div>
+                    <div class="tournament-detail">
+                        <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        ${t.prize}
+                    </div>
+                    <div class="tournament-status">${t.status}</div>
+                </div>
+            `).join('');
+        }
+
+        function renderRanking() {
+            const list = document.getElementById('rankingList');
+            list.innerHTML = ranking.map(b => `
+                <div class="ranking-item rank-${b.rank <= 3 ? b.rank : 'other'}">
+                    <div class="ranking-header">
+                        <div class="ranking-left">
+                            <span class="ranking-number">#${b.rank}</span>
+                            <div>
+                                <div class="ranking-name">${b.country} ${b.name}</div>
+                                <div class="ranking-record">${b.wins}V - ${b.losses}D</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ranking-earnings">💰 ${b.earnings}</div>
+                </div>
+            `).join('');
+        }
+
+        function selectTournament(id) {
+            selectedTournament = tournaments.find(t => t.id === id);
+            renderTournaments();
+            renderCenter();
+        }
+
+        function renderCenter() {
+            const center = document.getElementById('centerColumn');
+            
+            if (!selectedTournament) {
+                center.innerHTML = `
+                    <div class="empty-state">
+                        <svg class="empty-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path>
+                        </svg>
+                        <div class="empty-title">Sélectionnez un tournoi</div>
+                        <div class="empty-text">Cliquez sur un tournoi à gauche pour voir les détails et le tableau</div>
+                    </div>
+                `;
+                return;
+            }//Fai1t par Aze2llia avec I5A
+
+            center.innerHTML = `
+                <div class="tournament-details">
+                    <h2 class="tournament-title">${selectedTournament.name}</h2>
+                    
+                    <div class="prizes-section">
+                        <h3 class="prizes-title">Prix à gagner</h3>
+                        <div class="prizes-grid">
+                            <div class="prize-card prize-gold">
+                                <div class="prize-medal">🥇</div>
+                                <div class="prize-amount">${selectedTournament.prizes.first}</div>
+                                <div class="prize-place">1ère place</div>
+                            </div>
+                            <div class="prize-card prize-silver">
+                                <div class="prize-medal">🥈</div>
+                                <div class="prize-amount">${selectedTournament.prizes.second}</div>
+                                <div class="prize-place">2ème place</div>
+                            </div>
+                            <div class="prize-card prize-bronze">
+                                <div class="prize-medal">🥉</div>
+                                <div class="prize-amount">${selectedTournament.prizes.third}</div>
+                                <div class="prize-place">3ème place</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3 class="bracket-title">Tableau des matchs</h3>
+                    <div class="bracket-section">
+                        ${renderBracket()}
+                    </div>
+                </div>
+            `;
+        }
+
+      function renderBracket() {
+    const p = selectedTournament.participants;
+    const fighters = selectedTournament.fighters || [];
+    const results = selectedTournament.results || {};
+    
+    if (p === 8) {
+        return `
+            <div class="bracket-container">
+                <div class="bracket-round">
+                    <div class="bracket-round-title">Quarts de finale</div>
+                    <div class="bracket-matches">
+                        ${Array.from({length: 4}, (_, i) => `
+                            <div class="bracket-match">
+                                <div class="bracket-fighter" onclick="setWinner('quarters', ${i}, 0)" style="cursor: pointer;">${fighters[i*2] || 'TBD'}</div>
+                                <div class="bracket-fighter" onclick="setWinner('quarters', ${i}, 1)" style="cursor: pointer;">${fighters[i*2+1] || 'TBD'}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+                <div class="bracket-round">
+                    <div class="bracket-round-title">Demi-finales</div>
+                    <div class="bracket-matches" style="gap: 6rem;">
+                        ${Array.from({length: 2}, (_, i) => `
+                            <div class="bracket-match">
+                                <div class="bracket-fighter" onclick="setWinner('semis', ${i}, 0)" style="cursor: pointer;">${results.quarters?.[i*2] || 'TBD'}</div>
+                                <div class="bracket-fighter" onclick="setWinner('semis', ${i}, 1)" style="cursor: pointer;">${results.quarters?.[i*2+1] || 'TBD'}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+                <div class="bracket-round">
+                    <div class="bracket-round-title" style="font-size: 1.25rem;">🏆 FINALE 🏆</div>
+                    <div class="bracket-matches">
+                        <div class="bracket-match finale">
+                            <div class="bracket-fighter" onclick="setWinner('final', 0, 0)" style="cursor: pointer;">${results.semis?.[0] || 'TBD'}</div>
+                            <div class="bracket-fighter" onclick="setWinner('final', 0, 1)" style="cursor: pointer;">${results.semis?.[1] || 'TBD'}</div>
+                        </div>
+    </div>
+</div>
+${results.final ? `
+<div class="bracket-round">
+    <div class="bracket-round-title" style="font-size: 1.5rem;">👑 CHAMPION 👑</div>
+    <div class="bracket-matches">
+        <div class="bracket-match finale" style="text-align: center; padding: 1.5rem; font-size: 1.25rem;">
+            ${results.final}
+        </div>
+    </div>
+</div>
+` : ''}            </div>
+  `;
+    }
+    //Fai7t par Azelli2a avec IA
+    if (p === 16) {
+        return `
+            <div class="bracket-container">
+                <div class="bracket-round">
+                    <div class="bracket-round-title">8èmes de finale</div>
+                    <div class="bracket-matches">
+                        ${Array.from({length: 8}, (_, i) => `
+                            <div class="bracket-match">
+                                <div class="bracket-fighter" onclick="setWinner('round8', ${i}, 0)" style="cursor: pointer;">${fighters[i*2] || 'TBD'}</div>
+                                <div class="bracket-fighter" onclick="setWinner('round8', ${i}, 1)" style="cursor: pointer;">${fighters[i*2+1] || 'TBD'}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+                <div class="bracket-round">
+                    <div class="bracket-round-title">Quarts de finale</div>
+                    <div class="bracket-matches" style="gap: 4rem;">
+                        ${Array.from({length: 4}, (_, i) => `
+                            <div class="bracket-match">
+                                <div class="bracket-fighter" onclick="setWinner('quarters', ${i}, 0)" style="cursor: pointer;">${results.round8?.[i*2] || 'TBD'}</div>
+                                <div class="bracket-fighter" onclick="setWinner('quarters', ${i}, 1)" style="cursor: pointer;">${results.round8?.[i*2+1] || 'TBD'}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+                <div class="bracket-round">
+                    <div class="bracket-round-title">Demi-finales</div>
+                    <div class="bracket-matches" style="gap: 10rem;">
+                        ${Array.from({length: 2}, (_, i) => `
+                            <div class="bracket-match">
+                                <div class="bracket-fighter" onclick="setWinner('semis', ${i}, 0)" style="cursor: pointer;">${results.quarters?.[i*2] || 'TBD'}</div>
+                                <div class="bracket-fighter" onclick="setWinner('semis', ${i}, 1)" style="cursor: pointer;">${results.quarters?.[i*2+1] || 'TBD'}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+                <div class="bracket-round">
+   <div class="bracket-round">
+    <div class="bracket-round-title" style="font-size: 1.25rem;">🏆 FINALE 🏆</div>
+    <div class="bracket-matches">
+        <div class="bracket-match finale">
+            <div class="bracket-fighter" onclick="setWinner('final', 0, 0)" style="cursor: pointer;">${results.semis?.[0] || 'TBD'}</div>
+            <div class="bracket-fighter" onclick="setWinner('final', 0, 1)" style="cursor: pointer;">${results.semis?.[1] || 'TBD'}</div>
+        </div>
+    </div>
+</div>
+${results.final ? `
+<div class="bracket-round">
+    <div class="bracket-round-title" style="font-size: 1.5rem;">👑 CHAMPION 👑</div>
+    <div class="bracket-matches">
+        <div class="bracket-match finale" style="text-align: center; padding: 1.5rem; font-size: 1.25rem;">
+            ${results.final}
+        </div>
+    </div>
+</div>
+` : ''}            </div>
+        `;
+    }
+    //Fait parç Azellia avecs IA
+    return `
+        <div class="bracket-container">
+            <div class="bracket-round">
+                <div class="bracket-round-title" style="font-size: 0.875rem;">16èmes de finale</div>
+                <div class="bracket-matches" style="gap: 1rem;">
+                    ${Array.from({length: 16}, (_, i) => `
+                        <div class="bracket-match" style="width: 176px;">
+                            <div class="bracket-fighter" onclick="setWinner('round16', ${i}, 0)" style="cursor: pointer;">${fighters[i*2] || 'TBD'}</div>
+                            <div class="bracket-fighter" onclick="setWinner('round16', ${i}, 1)" style="cursor: pointer;">${fighters[i*2+1] || 'TBD'}</div>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+            <div class="bracket-round">
+                <div class="bracket-round-title" style="font-size: 0.875rem;">8èmes de finale</div>
+                <div class="bracket-matches" style="gap: 3rem;">
+                    ${Array.from({length: 8}, (_, i) => `
+                        <div class="bracket-match" style="width: 176px;">
+                            <div class="bracket-fighter" onclick="setWinner('round8', ${i}, 0)" style="cursor: pointer;">${results.round16?.[i*2] || 'TBD'}</div>
+                            <div class="bracket-fighter" onclick="setWinner('round8', ${i}, 1)" style="cursor: pointer;">${results.round16?.[i*2+1] || 'TBD'}</div>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+            <div class="bracket-round">
+                <div class="bracket-round-title">Quarts de finale</div>
+                <div class="bracket-matches" style="gap: 7rem;">
+                    ${Array.from({length: 4}, (_, i) => `
+                        <div class="bracket-match">
+                            <div class="bracket-fighter" onclick="setWinner('quarters', ${i}, 0)" style="cursor: pointer;">${results.round8?.[i*2] || 'TBD'}</div>
+                            <div class="bracket-fighter" onclick="setWinner('quarters', ${i}, 1)" style="cursor: pointer;">${results.round8?.[i*2+1] || 'TBD'}</div>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+            <div class="bracket-round">
+                <div class="bracket-round-title">Demi-finales</div>
+                <div class="bracket-matches" style="gap: 15rem;">
+                    ${Array.from({length: 2}, (_, i) => `
+                        <div class="bracket-match">
+                            <div class="bracket-fighter" onclick="setWinner('semis', ${i}, 0)" style="cursor: pointer;">${results.quarters?.[i*2] || 'TBD'}</div>
+                            <div class="bracket-fighter" onclick="setWinner('semis', ${i}, 1)" style="cursor: pointer;">${results.quarters?.[i*2+1] || 'TBD'}</div>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+<div class="bracket-round">
+    <div class="bracket-round-title" style="font-size: 1.25rem;">🏆 FINALE 🏆</div>
+    <div class="bracket-matches">
+        <div class="bracket-match finale">
+            <div class="bracket-fighter" onclick="setWinner('final', 0, 0)" style="cursor: pointer;">${results.semis?.[0] || 'TBD'}</div>
+            <div class="bracket-fighter" onclick="setWinner('final', 0, 1)" style="cursor: pointer;">${results.semis?.[1] || 'TBD'}</div>
+        </div>
+    </div>
+</div>
+${results.final ? `
+<div class="bracket-round">
+    <div class="bracket-round-title" style="font-size: 1.5rem;">👑 CHAMPION 👑</div>
+    <div class="bracket-matches">
+        <div class="bracket-match finale" style="text-align: center; padding: 1.5rem; font-size: 1.25rem;">
+            ${results.final}
+        </div>
+    </div>
+</div>
+` : ''}        </div>
+    `;
+}//Fait par Azell5ia avec IA
+
+        renderTournaments();
+        renderRanking();
+        renderCenter();
+    </script>
+</body>
+</html>
+
+
+
+
+
+
